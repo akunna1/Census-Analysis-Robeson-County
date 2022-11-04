@@ -1,4 +1,4 @@
-#Extracting Census Data for Robeson County, NC
+#Extracting Census Data for Robeson County, NC using R and ArcGIS Pro
 
 library(tidyverse) #Assists with data import, tidying, manipulation, and data visualization
 library(tidycensus) #Helps R users get Census data that is pre-prepared for exploration within the tidyverse, and optionally spatially with sf
@@ -14,7 +14,7 @@ library(ggplot2) #Provides helpful commands to create complex plots from data in
 # Retrieving some information from the 2013 5-year ACS
 acs_vars = load_variables(2013, "acs5")
 
-# The data is huge, so I am saving it to a file and view it on Excel.
+# The data is huge, so I am saving it to a file to view it on Excel.
 write.csv(acs_vars,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/acsvars.csv')
 
 # Retrieve ACS data on the income levels of the households in Robeson county tract in North Carolina
@@ -50,7 +50,7 @@ View(household_income)
 # To do any spatial analysis, I have to join the household_income data to spatial information
 # Spatial information was obtained from: https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
 
-# On ArcGIS Pro, I opened the 2013 downloaded shapefile for the tracts in NC and extract those of Robeson County
+# On ArcGIS Pro, I opened the 2013 downloaded shapefile for the tracts in NC and extract those of Robeson County using the Select by Attributes tool
 #County FIPS =37155. On the attribute table, COUNTYFP = 155
 
 # Read in Robeson county tract shapefile
