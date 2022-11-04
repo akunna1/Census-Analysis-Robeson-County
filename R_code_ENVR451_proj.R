@@ -50,8 +50,11 @@ View(household_income)
 # To do any spatial analysis, I have to join the household_income data to spatial information
 # Spatial information was obtained from: https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
 
-# Download 2013 Robeson county tract shapefile from the site, and load it into R.
-robeson_county = read_sf("tl_2013_37_tract.shp")
+# On ArcGIS Pro, I opened the 2013 downloaded shapefile for the tracts in NC and extract those of Robeson County
+#County FIPS =37155. On the attribute table, COUNTYFP = 155
+
+# Read in Robeson county tract shapefile
+robeson_county = read_sf("Robeson_county_tracts.shp")
 
 # Join the datasets together
 robeson_county_joined = left_join(robeson_county, household_income, by="GEOID")
@@ -62,6 +65,8 @@ robeson_county_joined$percent_under_35k = ((robeson_county_joined$lessthan_10kE 
 robeson_county_joined$percent_under_35k
 
 # project the data to NC State Plane
+# Got the state plane number from https://www.eye4software.com/hydromagic/documentation/state-plane-coordinate-systems/
+
 robeson_county_joined = st_transform(robeson_county_joined,32119)
 
 # And map income poverty percent
@@ -71,4 +76,3 @@ ggplot() +
 
 view(robeson_county_joined)
 
-#Narrowing down to Robeson county? Open shapefile in ArcGIS Pro
