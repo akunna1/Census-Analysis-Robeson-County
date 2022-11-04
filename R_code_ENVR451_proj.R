@@ -17,3 +17,49 @@ acs_vars = load_variables(2013, "acs5")
 # The data is huge, so I am saving it to a file and view it on Excel.
 write.csv(acs_vars,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/acsvars.csv')
 
+# Retrieve ACS data on the income levels of the households in Robeson county tract in North Carolina
+household_income = get_acs(
+  geography="tract",  # could be tract, block group, etc.
+  variables=c(
+    "total_income"="B19001_001",
+    "lessthan_10k"="B19001_002",
+    "i10k_to_14.9k"="B19001_003",
+    "i15k_to_19.9k"="B19001_004",
+    "i20k_to_24.9k"="B19001_005",
+    "i25k_to_29.9k"="B19001_006",
+    "i30k_to_34.9k"="B19001_007",
+    "i35k_to_39.9k"="B19001_008",
+    "i40k_to_44.9k"="B19001_009",
+    "i45k_to_49.9k"="B19001_010",
+    "i50k_to_59.9k"="B19001_011",
+    "i60k_to_74.9k"="B19001_012",
+    "i75k_to_99.9k"="B19001_013",
+    "i100k_to_124.9k"="B19001_014",
+    "i125k_to_149.9k"="B19001_015",
+    "i150k_to_199.9k"="B19001_016",
+    "i200k_or_more"="B19001_017"
+  ),
+  year=2013,
+  state="NC",
+  survey="acs5",
+  output="wide"
+)
+
+View(household_income)
+
+# To do any spatial analysis, I have to join the household_income data to spatial information
+# Spatial information was obtained from: https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
+
+# Download 2013 Robeson county tract shapefile from the site, and load it into R.
+robeson_county = read_sf("tl_2013_37_tract.shp")
+
+# Join the datasets together
+robeson_county_joined = left_join(robeson_county, household_income, by="GEOID")
+robeson_county_joined
+
+#Calculating the percentage of all households that make <$35,000/year in each tract
+robeson_county_joined$percent_under_35k = ((robeson_county_joined$lessthan_10kE + robeson_county_joined$i10k_to_14.9kE + robeson_county_joined$i15k_to_19.9kE + robeson_county_joined$i20k_to_24.9kE + robeson_county_joined$i25k_to_29.9kE + robeson_county_joined$i30k_to_34.9kE)/ robeson_county_joined$total_incomeE)*100
+robeson_county_joined$percent_under_35k
+
+# project the data to NC State Plane
+robeson_county = st_transform(robeson_county,26943)
