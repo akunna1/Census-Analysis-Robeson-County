@@ -70,3 +70,5 @@ ggplot() +
   scale_fill_viridis_c(option = "C")
 
 view(robeson_county_joined)
+
+#Narrowing down to Robeson county? Open shapefile in ArcGIS Pro
