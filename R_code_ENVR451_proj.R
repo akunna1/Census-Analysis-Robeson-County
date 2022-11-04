@@ -62,4 +62,11 @@ robeson_county_joined$percent_under_35k = ((robeson_county_joined$lessthan_10kE 
 robeson_county_joined$percent_under_35k
 
 # project the data to NC State Plane
-robeson_county = st_transform(robeson_county,26943)
+robeson_county_joined = st_transform(robeson_county_joined,32119)
+
+# And map income poverty percent
+ggplot() +
+  geom_sf(data=robeson_county_joined, aes(fill=percent_under_35k)) +
+  scale_fill_viridis_c(option = "C")
+
+view(robeson_county_joined)
