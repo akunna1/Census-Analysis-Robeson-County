@@ -72,7 +72,10 @@ robeson_county_joined = st_transform(robeson_county_joined,32119)
 # And map income poverty percent
 ggplot() +
   geom_sf(data=robeson_county_joined, aes(fill=percent_under_35k)) +
-  scale_fill_viridis_c(option = "C")
+  scale_fill_viridis_c(option = "T")
 
 view(robeson_county_joined)
-
+ 
+#show correlation between the poverty percent and concentration of NO2
+# perhaps a scatter plot- show r2 value
+# combining pollutants or not?
