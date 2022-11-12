@@ -17,6 +17,7 @@ acs_vars = load_variables(2013, "acs5")
 # The data is huge, so I am saving it to a file to view it on Excel.
 write.csv(acs_vars,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/acsvars.csv')
 
+# Social factor 1: Income level --> finding the percent of households living in poverty. Poverty is defined as earning less than 35k annually
 # Retrieve ACS data on the income levels of the households in Robeson county tract in North Carolina
 household_income = get_acs(
   geography="tract",  # could be tract, block group, etc.
@@ -66,16 +67,58 @@ robeson_county_joined$percent_under_35k
 
 # project the data to NC State Plane
 # Got the state plane number from https://www.eye4software.com/hydromagic/documentation/state-plane-coordinate-systems/
-
 robeson_county_joined = st_transform(robeson_county_joined,32119)
 
-# And map income poverty percent
+# And map of income poverty percent
 ggplot() +
   geom_sf(data=robeson_county_joined, aes(fill=percent_under_35k)) +
-  scale_fill_viridis_c(option = "T")
+  scale_fill_viridis_c(option = "D")
 
 view(robeson_county_joined)
- 
+write.csv(robeson_county_joined,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/ENVR_451_Group_project_V2/robeson_county_joined.csv')
+
+# Social factor 2: race --> Defining minorities to be Black or AA, American Indian, Alaska Native, Asian, Native Hawaiians and  Pacific Islanders
+race_minorities = get_acs(
+  geography="tract",  # could be tract, block group, etc.
+  variables=c(
+    "total_race"="B02001_001",
+    "white_race"="B02001_002",
+    "black_race"="B02001_003",
+    "native_race"="B02001_004",     #American Indian and Alaska native race
+    "asian_race"="B02001_005",
+    "islander_race"="B02001_006",
+    "other_race"="B02001_007",
+    "Two_or_more_race"="B02001_008",
+    "X_Two_or_more_race"="B02001_009", # Two or more races!!Two races including Some other race
+    "Y_Two_or_more_race"="B02001_010" # Two or more races!!Two races excluding Some other race, and three or more races
+  ),
+  year=2013,
+  state="NC",
+  survey="acs5",
+  output="wide"
+)
+
+View(race_minorities)
+
+# joining census data with shapefile
+robeson_county_joined_2 = left_join(robeson_county, race_minorities, by="GEOID")
+robeson_county_joined_2
+
+# calculating the percent of minorities in Robeson county
+robeson_county_joined_2$percent_minority = ((robeson_county_joined_2$black_raceE + robeson_county_joined_2$native_raceE + robeson_county_joined_2$asian_raceE + robeson_county_joined_2$islander_raceE + robeson_county_joined_2$other_raceE)/ robeson_county_joined_2$total_raceE)*100
+robeson_county_joined_2$percent_minority
+
+# project the data to NC State Plane
+robeson_county_joined_2 = st_transform(robeson_county_joined_2,32119)
+
+# And map of income poverty percent
+ggplot() +
+  geom_sf(data=robeson_county_joined_2, aes(fill=percent_minority)) +
+  scale_fill_viridis_c(option = "A")
+
+view(robeson_county_joined_2)
+
 #show correlation between the poverty percent and concentration of NO2
 # perhaps a scatter plot- show r2 value
 # combining pollutants or not?
+#using spatial join on ArcGIS Pro?
