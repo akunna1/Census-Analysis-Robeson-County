@@ -75,7 +75,7 @@ ggplot() +
   scale_fill_viridis_c(option = "D")
 
 view(robeson_county_joined)
-write.csv(robeson_county_joined,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/ENVR_451_Group_project_V2/robeson_county_joined.csv')
+#write.csv(robeson_county_joined,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/ENVR_451_Group_project_V2/robeson_county_joined.csv')
 
 # Social factor 2: race --> Defining minorities to be Black or AA, American Indian, Alaska Native, Asian, Native Hawaiians and  Pacific Islanders
 race_minorities = get_acs(
