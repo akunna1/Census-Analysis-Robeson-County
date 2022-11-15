@@ -117,3 +117,10 @@ ggplot() +
   scale_fill_viridis_c(option = "A")
 
 view(robeson_county_joined_2)
+
+#finding max and min for the created columns
+max(robeson_county_joined$percent_under_35k)
+min(robeson_county_joined$percent_under_35k)
+
+max(robeson_county_joined_2$percent_minority)
+min(robeson_county_joined_2$percent_minority)
