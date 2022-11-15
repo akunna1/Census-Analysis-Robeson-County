@@ -117,8 +117,3 @@ ggplot() +
   scale_fill_viridis_c(option = "A")
 
 view(robeson_county_joined_2)
-
-#show correlation between the poverty percent and concentration of NO2
-# perhaps a scatter plot- show r2 value
-# combining pollutants or not?
-#using spatial join on ArcGIS Pro?
