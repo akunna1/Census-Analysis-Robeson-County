@@ -3,7 +3,6 @@
 # State --> County --> Census Tract --> Block Groups
 
 #_______________________________________________________________________________
-#_______________________________________________________________________________
 library(tidyverse) #Assists with data import, tidying, manipulation, and data visualization
 library(tidycensus) #Helps R users get Census data that is pre-prepared for exploration within the tidyverse, and optionally spatially with sf
 library(sf) #Support for simple features, a standardized way to encode spatial vector data
@@ -21,7 +20,6 @@ acs_vars = load_variables(2013, "acs5")
 # The data is huge, so I am saving it to a file to view it on Excel.
 write.csv(acs_vars,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/acsvars.csv')
 
-#_______________________________________________________________________________
 #_______________________________________________________________________________
 # Social factor 1: Income level --> finding the percent of households living in poverty. Poverty is defined as earning less than 35k annually
 # Retrieve ACS data on the income levels of the households in Robeson county tract in North Carolina
@@ -63,7 +61,7 @@ View(household_income)
 # Read in Robeson county tract shapefile
 robeson_county = read_sf("Robeson_county_tracts.shp")
 
-# Join the datasets together
+# Join the datasets together (shapefile + census data of household income)
 robeson_county_joined = left_join(robeson_county, household_income, by="GEOID")
 robeson_county_joined
 
@@ -75,7 +73,7 @@ robeson_county_joined$percent_under_35k
 # Got the state plane number from https://www.eye4software.com/hydromagic/documentation/state-plane-coordinate-systems/
 robeson_county_joined = st_transform(robeson_county_joined,32119)
 
-# And map of income poverty percent
+# Add map of income poverty percent
 ggplot() +
   geom_sf(data=robeson_county_joined, aes(fill=percent_under_35k)) +
   scale_fill_viridis_c(option = "D")
@@ -83,7 +81,6 @@ ggplot() +
 view(robeson_county_joined)
 #write.csv(robeson_county_joined,file='/Users/akunna1/Desktop/ENVR 451/Group_project_R/ENVR_451_Group_Proj/ENVR_451_Group_project_V2/robeson_county_joined.csv')
 
-#_______________________________________________________________________________
 #_______________________________________________________________________________
 # Social factor 2: race --> Defining minorities to be Black or AA, American Indian, Alaska Native, Asian, Native Hawaiians and  Pacific Islanders
 race_minorities = get_acs(
@@ -108,7 +105,7 @@ race_minorities = get_acs(
 
 View(race_minorities)
 
-# joining census data with shapefile
+# joining census data with shapefile (shapefile + census data of racial demographics)
 robeson_county_joined_2 = left_join(robeson_county, race_minorities, by="GEOID")
 robeson_county_joined_2
 
@@ -119,7 +116,7 @@ robeson_county_joined_2$percent_minority
 # project the data to NC State Plane
 robeson_county_joined_2 = st_transform(robeson_county_joined_2,32119)
 
-# And map of income poverty percent
+# Add map of income poverty percent
 ggplot() +
   geom_sf(data=robeson_county_joined_2, aes(fill=percent_minority)) +
   scale_fill_viridis_c(option = "A")
@@ -134,8 +131,8 @@ max(robeson_county_joined_2$percent_minority)
 min(robeson_county_joined_2$percent_minority)
 
 #_______________________________________________________________________________
-#_______________________________________________________________________________
 # Population Density
+# Extracting census data for population density in robeson county, NC and calling it pop_density
 pop_density = get_acs(
   geography="tract",  # could be tract, block group, etc.
   variables=c( 
@@ -149,18 +146,19 @@ pop_density = get_acs(
 
 View(pop_density)
 
-# joining census data with shapefile
+# joining census data with Robeson county shapefile and calling it robeson_county_joined_3
 robeson_county_joined_3 = left_join(robeson_county, pop_density, by="GEOID")
-robeson_county_joined_3
+robeson_county_joined_3 # shapefile + pop_density census data
 
-# calculating the population density in Robeson county
+# Renaming sample_countE column in robeson_county_joined_3 to population_density
 robeson_county_joined_3$population_density = robeson_county_joined_3$sample_countE
-robeson_county_joined_3$population_density
+robeson_county_joined_3$population_density # population_density is the new column name
 
 # project the data to NC State Plane
 robeson_county_joined_3 = st_transform(robeson_county_joined_3,32119)
 
-# And map of population density
+# Add map of population density
+# Plot --> robeson_county_joined_3 which is shapefile + pop_density census data
 ggplot() +
   geom_sf(data=robeson_county_joined_3, aes(fill=population_density)) +
   scale_fill_viridis_c(option = "E")
