@@ -1,6 +1,6 @@
 # Robeson County Census Data Analysis
 
-This project analyzes census data from Robeson County, North Carolina, focusing on household income, racial distribution, and concentrations of air pollutants such as NO, SO₂, and CO. The analysis leverages spatial data techniques and visualization to uncover demographic and environmental patterns within the county.
+This project analyzes census data from Robeson County, North Carolina 🗺️, focusing on household income, racial distribution, and concentrations of air pollutants such as NO, SO₂, and CO. The analysis leverages spatial data techniques and visualization to uncover demographic and environmental patterns within the county.
 
 ---
 
